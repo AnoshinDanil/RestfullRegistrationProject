@@ -1,0 +1,23 @@
+spring:
+  application:
+    name: RestfullRegistrationProject
+  datasource:
+    username: postgres
+    password: postgres
+    url: jdbc:postgresql://localhost:5432/registration_db
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+  mail:
+    host: smtp.yandex.ru
+    port: 465
+    username: daniilsanoshin@yandex.ru
+    password: khnflxwwlgmqpcag
+    properties:
+      mail.smtp.auth: true
+      mail.smtp.starttls.enable: false
+      mail.smtp.ssl.enable: true
+      mail.smtp.trust: smtp.yandex.ru
+      mail.debug: true
