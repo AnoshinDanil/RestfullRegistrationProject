@@ -9,4 +9,5 @@ public interface RegistrationUserService {
     void deleteUser (User user);
     User saveUser (UserRegistrationDto userDto);
     void addAwaitingUser (UserRegistrationDto userDto, String code);
+    User confirmRegistration (String email, String code);
 }

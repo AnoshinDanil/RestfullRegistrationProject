@@ -6,7 +6,9 @@ import com.anoshindanil.restfullregistrationproject.model.dto.UserRegistrationDt
 import com.anoshindanil.restfullregistrationproject.model.entity.User;
 import com.anoshindanil.restfullregistrationproject.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -17,7 +19,7 @@ import java.util.Map;
 public class RegistrationUserServiceImpl implements RegistrationUserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
-    private Map<String, AwaitingUser> awaitingUserMap = new HashMap<>();
+    private final Map<String, AwaitingUser> awaitingUserMap = new HashMap<>();
 
 
     @Override
@@ -50,6 +52,30 @@ public class RegistrationUserServiceImpl implements RegistrationUserService {
         );
 
         awaitingUserMap.put(userDto.getEmail(), awaitingUser);
+    }
 
+    @Override
+    public User confirmRegistration(String email, String code) {
+        AwaitingUser awaitingUser = awaitingUserMap.get(email);
+
+        if (awaitingUser == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found or already confirmed.");
+        }
+
+       if (!awaitingUser.getCode().equals(code)) {
+           throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid confirmation code.");
+       }
+
+        if (awaitingUser.isCodeValid(2)) {
+            awaitingUserMap.remove(email);
+            throw new ResponseStatusException(HttpStatus.GONE, "Confirmation code has expired.");
+        }
+
+        User user = userMapper.toUser(awaitingUser.getUserRegistrationDto());
+        userRepository.save(user);
+
+        awaitingUserMap.remove(email);
+
+        return user;
     }
 }

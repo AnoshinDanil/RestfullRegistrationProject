@@ -4,6 +4,7 @@ import com.anoshindanil.restfullregistrationproject.model.dto.UserRegistrationDt
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 
 @Data
@@ -13,7 +14,7 @@ public class AwaitingUser {
     private String code;
     private LocalDateTime createdAt;
 
-    public Boolean isCodeValid (int countOfMinutes) {
-        return createdAt.plusMinutes(countOfMinutes).isAfter(LocalDateTime.now());
+    public Boolean isCodeValid(int countOfMinutes) {
+        return Duration.between(createdAt, LocalDateTime.now()).toMinutes() <= countOfMinutes;
     }
 }
