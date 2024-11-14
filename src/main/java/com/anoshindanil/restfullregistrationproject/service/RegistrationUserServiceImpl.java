@@ -24,12 +24,12 @@ public class RegistrationUserServiceImpl implements RegistrationUserService {
 
     @Override
     public Boolean isUserNameExist(String username) {
-        return userRepository.isUserNameExists(username);
+        return userRepository.existsByUsername(username);
     }
 
     @Override
     public Boolean isPasswordExist(String password) {
-        return userRepository.isPasswordExists(password);
+        return userRepository.existsByPassword(password);
     }
 
     @Override
@@ -72,6 +72,7 @@ public class RegistrationUserServiceImpl implements RegistrationUserService {
         }
 
         User user = userMapper.toUser(awaitingUser.getUserRegistrationDto());
+        user.setIsActive(true);
         userRepository.save(user);
 
         awaitingUserMap.remove(email);

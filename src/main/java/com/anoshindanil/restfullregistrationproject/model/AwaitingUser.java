@@ -15,6 +15,6 @@ public class AwaitingUser {
     private LocalDateTime createdAt;
 
     public Boolean isCodeValid(int countOfMinutes) {
-        return Duration.between(createdAt, LocalDateTime.now()).toMinutes() <= countOfMinutes;
+        return createdAt.plusMinutes(countOfMinutes).isBefore(LocalDateTime.now());
     }
 }
